@@ -1,0 +1,36 @@
+/* F: the stone wordmark panel in the footer. Everything inside #stones is rendered by js/sections/stones.js. */
+#stones {
+  position: relative; overflow: hidden;
+  height: 45svh; min-height: 260px;
+  border-radius: 12px;
+  background: var(--black); color: var(--paper-2);
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+#stones[role="button"] { cursor: none; }
+#stones:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+
+/* the ring cursor: positioned by JS; --h (0..1) is how far the hold has filled */
+#stones .st-cursor { --h: 0; position: absolute; left: 0; top: 0; pointer-events: none; opacity: 0; transition: opacity .35s var(--ease); }
+#stones.is-over .st-cursor, #stones.is-centre .st-cursor { opacity: 1; }
+#stones .st-cursor svg { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; max-width: none; overflow: visible; transform: rotate(-90deg) scale(calc(1 + var(--h) * .45)); }
+#stones .st-cursor circle { fill: none; stroke: var(--paper-2); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#stones .st-cursor .st-fill { stroke-width: 2.5; stroke-dashoffset: calc((1 - var(--h)) * 1px); }
+#stones .st-cursor i { position: absolute; left: -2px; top: -2px; width: 4px; height: 4px; border-radius: 50%; background: var(--paper-2); transform: scale(calc(1 + var(--h) * 1.5)); }
+#stones .st-cursor span {
+  position: absolute; left: 36px; top: -5px;
+  font: 500 var(--fs-micro)/1 var(--sans); letter-spacing: .1em; white-space: nowrap;
+  transform: translateX(calc(var(--h) * 10px));
+}
+#stones.is-centre .st-cursor span { left: 0; top: 36px; transform: translate(-50%, calc(var(--h) * 10px)); }
+
+/* no WebGL, or the module failed: the word in Marcellus, stone grey, cropped by the panel edge like the stones */
+.no-gl #stones::after, #stones.is-broken::after {
+  content: "MASA"; position: absolute; left: 0; right: 0; bottom: -.14em;
+  font: 400 20vw/1 var(--serif); letter-spacing: .32em; text-indent: .32em; text-align: center;
+  color: #8b8882;
+}
+#stones.is-broken > * { display: none; }
+
+@media (max-width: 767px) {
+  #stones { height: 28svh; min-height: 200px; }
+}
