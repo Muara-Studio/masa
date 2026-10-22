@@ -102,11 +102,9 @@ export function planSpray({ seed = 1, flowers = 5, buds = 3, reach = 1, rise = 1
 // sprays for the hero. x, y are view fractions (-1..1) at depth z; g* push a spray out to its gate pose; s is size in view units
 export function sprayLayout(mobile) {
   const all = [
-    { seed: 7, variant: 0, dir: 1, flowers: 5, stem: 3, x: 0.6, y: 0.62, z: 1, r: 1.25, s: 0.8, gx: 0.2, gy: -1.9, gr: 0.5, par: 0.35 },
+    { seed: 7, variant: 0, dir: 1, flowers: 5, stem: 3, x: 0.35, y: -0.3, z: 1, r: 1.25, s: 0.8, gx: 0.2, gy: -1.6, gr: 0.5, par: 0.35 },
     { seed: 3, variant: 1, dir: -1, flowers: 2, stem: 2, reach: 0.45, x: -1.38, y: -0.15, z: 2.6, r: -0.15, s: 0.95, gx: -0.04, gy: -0.1, gr: 0.12, par: 0.5 },
     { seed: 11, variant: 2, dir: 1, flowers: 4, stem: 2, x: 1.2, y: 0.15, z: -0.8, r: 0.6, s: 0.55, gx: 0.05, gy: -0.1, gr: 0.15, par: 0.22 },
-    { seed: 5, variant: 1, dir: -1, flowers: 3, stem: 2, x: -1.15, y: -0.6, z: -1.8, r: -0.9, s: 0.5, gx: -0.25, gy: -0.1, gr: -0.3, par: 0.15 },
-    { seed: 19, variant: 2, dir: 1, flowers: 2, stem: 2, x: 1.15, y: -0.75, z: -2.6, r: 0.2, s: 0.45, gx: 0.2, gy: 0.1, gr: 0.3, par: 0.1 },
   ];
   if (!mobile) return all;
   // phones: three sprays with their own poses, fewer flowers

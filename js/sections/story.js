@@ -16,12 +16,12 @@ export default function init(el, { gsap, reduced }) {
   // aria-label on a plain span is ignored, and the word spans read fine as they are
   const items = [...text.children].flatMap((n) => n.classList.contains('st__img') ? [n] : SplitText.create(n, { type: 'words', tag: 'span', aria: 'none' }).words);
 
-  const tl = gsap.timeline({ scrollTrigger: { trigger: text, start: 'top 82%', end: 'bottom 48%', scrub: true } });
+  const tl = gsap.timeline({ scrollTrigger: { trigger: text, start: 'top bottom', end: 'bottom 75%', scrub: true } });
   items.forEach((it, i) => {
     if (it.classList.contains('st__img')) {
       tl.fromTo(it, { scale: 0, rotate: -8 }, { scale: 1, rotate: 0, duration: 2.4, ease: 'back.out(1.5)' }, i * 0.5);
       tl.fromTo(it.firstElementChild, { scale: 1.5 }, { scale: 1, duration: 3, ease: 'power2.out' }, i * 0.5);
-    } else tl.fromTo(it, { color: '#3a3a3a' }, { color: paper, duration: 1.2, ease: 'none' }, i * 0.5);
+    } else tl.fromTo(it, { color: '#5a5a5a' }, { color: paper, duration: 1.2, ease: 'none' }, i * 0.5);
   });
   tl.fromTo(pill, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 2, ease: 'power3.out' }, '>-1');
 }

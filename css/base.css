@@ -3,6 +3,7 @@
   --ink: #1e1e1e;
   --paper: #f9f8f8;
   --paper-2: #f3f3f3;
+  --white: #fff; /* light sections in the reference are pure white */
   --black: #000;
   --mute: #5a5a5a;
   --dim: rgba(243, 243, 243, .45);
@@ -14,8 +15,10 @@
   --serif: "Marcellus", "Times New Roman", serif;
 
   --gutter: 24px;
-  --marquee-h: 28px;
-  --nav-h: 56px;
+  --marquee-h: 25px;
+  --nav-h: 50px;
+  /* the reference's default section height: one screen minus the header bar */
+  --sec-h: calc(100dvh - var(--nav-h));
   --ease: cubic-bezier(.22, 1, .36, 1);
   --ease-io: cubic-bezier(.65, 0, .35, 1);
 
@@ -26,12 +29,12 @@
   --fs-price: 18px;
   --fs-h3: clamp(28px, 3.33vw, 48px);
   --fs-h2: clamp(36px, 4.17vw, 60px);
-  --fs-story: clamp(34px, 4.6vw, 66px);
+  --fs-story: clamp(34px, 4.17vw, 60px);
   --fs-xl: clamp(56px, 8.66vw, 125px);
-  --fs-xxl: clamp(64px, 10.8vw, 156px);
+  --fs-xxl: clamp(48px, 7.7vw, 111px);
 }
 @media (max-width: 767px) {
-  :root { --gutter: 16px; --nav-h: 52px; }
+  :root { --gutter: 16px; }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -59,18 +62,30 @@ ul { margin: 0; padding: 0; list-style: none; }
 .meta { font: 400 var(--fs-ui)/1.5 var(--sans); text-transform: uppercase; }
 .display { font-family: var(--serif); font-weight: 400; text-transform: uppercase; line-height: 1; letter-spacing: 0; }
 
-/* the pill button used across sections: "EXPLORE MORE", "GET TICKETS", "VIEW ALL" */
+/* the button used across sections: "EXPLORE MORE", "GET TICKETS", "VIEW ALL". Its outline is a lopsided hexagon,
+   drawn as a mask over ::before so it takes currentColor and fills on hover. */
 .pill {
-  display: inline-flex; align-items: center; gap: 8px;
-  height: 36px; padding: 0 18px; border-radius: 999px;
-  border: 1px solid currentColor;
+  --pill-line: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M1 54 7 16 52 3 93 9 99 60 88 93 47 98 11 96Z' fill='none' stroke='%23000' stroke-width='1.2' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  --pill-fill: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M1 54 7 16 52 3 93 9 99 60 88 93 47 98 11 96Z'/%3E%3C/svg%3E");
+  position: relative; isolation: isolate;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 34px; padding: 0 22px;
   font: 500 var(--fs-ui)/1 var(--sans); letter-spacing: .12em; text-transform: uppercase;
-  transition: background-color .4s var(--ease), color .4s var(--ease);
+  transition: color .4s var(--ease);
 }
-.pill:hover, .pill:focus-visible { background: var(--paper-2); color: var(--black); border-color: var(--paper-2); }
-.pill--solid { background: var(--paper-2); color: var(--black); border-color: var(--paper-2); }
-.pill--solid:hover, .pill--solid:focus-visible { background: transparent; color: var(--paper-2); }
-.on-light .pill:hover, .on-light .pill:focus-visible { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pill::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: currentColor;
+  -webkit-mask: var(--pill-line) center / 100% 100% no-repeat; mask: var(--pill-line) center / 100% 100% no-repeat;
+}
+.pill:hover, .pill:focus-visible { color: var(--black); }
+.pill:is(:hover, :focus-visible)::before { background: var(--paper-2); -webkit-mask-image: var(--pill-fill); mask-image: var(--pill-fill); }
+.pill--solid { color: var(--black); }
+.pill--solid::before { background: var(--paper-2); -webkit-mask-image: var(--pill-fill); mask-image: var(--pill-fill); }
+.pill--solid:hover, .pill--solid:focus-visible { color: var(--paper-2); }
+.pill--solid:is(:hover, :focus-visible)::before { background: currentColor; -webkit-mask-image: var(--pill-line); mask-image: var(--pill-line); }
+.on-light .pill:hover, .on-light .pill:focus-visible { color: var(--paper); }
+.on-light .pill:is(:hover, :focus-visible)::before { background: var(--ink); }
+.pill:focus-visible { outline: none; }
 
 :focus-visible { outline: 1px solid currentColor; outline-offset: 3px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

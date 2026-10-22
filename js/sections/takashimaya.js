@@ -54,12 +54,12 @@ export default function init(el, { gsap, ScrollTrigger, reduced }) {
     rim.position.set(-5, 2, -4);
     scene.add(key, rim);
 
-    // toy a little over half the section height, centred at 45% from the top; narrower on phones
+    // toy a little over half the section height, centred at 52% from the top (under the title); narrower on phones
     s.resize = ({ w, h }) => {
       const asp = w / h, tan = Math.tan((camera.fov * Math.PI) / 360);
       const vh = Math.max(3.2 / 0.56, 3.8 / 0.72 / asp);
       camera.position.set(0, 0, vh / 2 / tan);
-      table.position.y = 0.1 * (vh / 2);
+      table.position.y = -0.04 * (vh / 2);
     };
     s.resize(s);
 

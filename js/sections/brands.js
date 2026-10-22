@@ -38,9 +38,11 @@ export default function init(el, { gsap, ScrollTrigger, reduced }) {
   const lines = el.querySelectorAll('.brands-line > span');
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
-    scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 20%', scrub: 0.6, onUpdate: (st) => el.classList.toggle('on-light', st.progress > 0.5) },
+    scrollTrigger: { trigger: el, start: 'top 25%', end: 'top -25%', scrub: 0.6, onUpdate: (st) => el.classList.toggle('on-light', st.progress > 0.5) },
   });
-  tl.fromTo(el, { '--bg': '#000000', '--fg': '#f3f3f3' }, { '--bg': '#f9f8f8', '--fg': '#1e1e1e' }, 0)
+  // the light comes up from the centre: the middle whitens first, the edges catch up (a radial vignette in between)
+  tl.fromTo(el, { '--bg': '#000000', '--fg': '#f3f3f3' }, { '--bg': '#ffffff', '--fg': '#1e1e1e', duration: 0.6 }, 0)
+    .fromTo(el, { '--edge': '#000000' }, { '--edge': '#ffffff', duration: 0.6 }, 0.4)
     .fromTo(cards.map((k) => k.c), { opacity: 0 }, { opacity: 1, stagger: 0.03 }, 0.25);
   if (!reduced) tl.fromTo(lines, { yPercent: 105 }, { yPercent: 0, ease: 'power3.out', stagger: 0.12 }, 0.1);
 

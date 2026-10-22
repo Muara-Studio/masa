@@ -160,16 +160,18 @@ export function makeTiger(THREE) {
   body.add(tail[0].parent);
 
   const g = gait(0), q = [0, 0];
-  // d: distance walked (also the root's x); look: head turn toward the camera, radians
-  function pose(d, look = 0) {
+  // d: distance walked (also the root's x); look: head turn toward the camera, radians; lie: 0 standing .. 1 lying down
+  function pose(d, look = 0, lie = 0) {
     gait(d, g);
     root.position.x = d;
-    body.position.y = g.bob;
-    head.rotation.set(0, -look, -0.1 + g.nod);
+    const stand = 1 - lie;
+    body.position.y = g.bob * stand - 1.02 * lie; // the belly settles onto the ground line
+    head.rotation.set(0, -look, -0.1 + g.nod * stand + 0.12 * lie);
     legs.forEach((L, i) => {
-      const [x, lift] = g.legs[i];
+      // lying: fore paws stretch out in front like a sphinx, hind legs fold under the haunch
+      const x = g.legs[i][0] * stand + (L.slide ? 1.5 : 0.32) * lie, lift = g.legs[i][1] * stand;
       // fore legs stay near-straight columns: the shoulder blade slides inside the chest instead of the leg folding
-      const ty = PAW_Y - L.y - g.bob, off = L.slide ? Math.min(0.2, Math.max(-0.08, ty + Math.sqrt(L.reach - x * x))) : 0;
+      const ty = PAW_Y - L.y - body.position.y, off = L.slide ? stand * Math.min(0.2, Math.max(-0.08, ty + Math.sqrt(Math.max(0, L.reach - x * x)))) : 0;
       L.hip.position.y = L.y + off;
       ik(L.a, L.b, x, ty - off + lift * L.lift, -1, q);
       L.hip.rotation.z = q[0];
@@ -177,7 +179,7 @@ export function makeTiger(THREE) {
       L.paw.rotation.z = -(q[0] + q[1]) + L.curl * lift;
     });
     tail.forEach((seg, i) => {
-      seg.rotation.z = seg.userData.rest + 0.05 * Math.sin(2 * g.sway - i * 0.7);
+      seg.rotation.z = seg.userData.rest - (i ? 0 : 0.8 * lie) + 0.05 * Math.sin(2 * g.sway - i * 0.7);
       seg.rotation.y = 0.14 * Math.sin(g.sway - i * 0.8);
     });
   }

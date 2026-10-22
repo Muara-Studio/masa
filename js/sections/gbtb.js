@@ -1,6 +1,6 @@
-// Gardens by the Bay: a sticky stage over 400dvh; the papercraft tiger walks across the title as you scroll.
+// Gardens by the Bay: a sticky stage over 400dvh; the papercraft tiger walks in over the title and lies down mid-stage, all scrubbed.
 import { stage, hasGL } from '../lib/stage.js';
-import { makeTiger, STRIDE } from '../lib/tiger.js';
+import { makeTiger } from '../lib/tiger.js';
 import { note } from '../lib/note.js';
 
 export default function init(el, { ScrollTrigger, reduced }) {
@@ -28,8 +28,8 @@ export default function init(el, { ScrollTrigger, reduced }) {
     let span = 10;
     s.resize = ({ w, h }) => {
       const asp = w / h, tan = Math.tan((camera.fov * Math.PI) / 360);
-      const vh = Math.max(tiger.height / 0.5, tiger.length / (asp < 1 ? 0.9 : 0.8) / asp);
-      const dist = vh / 2 / tan, ground = asp < 1 ? 0.63 : 0.78;
+      const vh = Math.max(tiger.height / 0.52, tiger.length / (asp < 1 ? 0.9 : 0.82) / asp);
+      const dist = vh / 2 / tan, ground = asp < 1 ? 0.63 : 0.69;
       camera.position.set(0, (2 * ground - 1) * (vh / 2), dist);
       span = vh * asp;
     };
@@ -37,10 +37,12 @@ export default function init(el, { ScrollTrigger, reduced }) {
 
     let shown = -1;
     s.frame = (t, dt) => {
-      if (reduced) return tiger.pose(STRIDE * 0.55, 0.3); // static, mid-stride, facing us a little
+      if (reduced) return tiger.pose(span * 0.12 - 3, 0.5, 1); // static: lying mid-stage, as the scroll leaves it
       shown = shown < 0 ? p : shown + (p - shown) * (1 - Math.exp(-dt * 5)); // eased follow, so the gait settles after the wheel stops
-      const d = -(span / 2 + 3.2) + (span + 7.4) * shown; // head enters at the left edge, tail tip leaves at the right
-      tiger.pose(d, 0.45 * Math.sin(Math.PI * shown) ** 4);
+      // walk in from off the left edge, slowing to a stop with the head at ~62% of the width (p .06 to .67), then lie down (.67 to .85)
+      const w = Math.min(Math.max((shown - 0.06) / 0.61, 0), 1), l = Math.min(Math.max((shown - 0.67) / 0.18, 0), 1);
+      const d = span * (-0.62 + 0.74 * (1 - (1 - w) ** 1.3)) - 3;
+      tiger.pose(d, 0.5 * l * l * (3 - 2 * l), l * l * (3 - 2 * l));
     };
   } catch (err) {
     console.error('[gbtb]', err);

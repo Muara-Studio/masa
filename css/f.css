@@ -1,7 +1,7 @@
 /* F: the stone wordmark panel in the footer. Everything inside #stones is rendered by js/sections/stones.js. */
 #stones {
   position: relative; overflow: hidden;
-  height: 45svh; min-height: 260px;
+  height: 54svh; min-height: 260px;
   border-radius: 12px;
   background: var(--black); color: var(--paper-2);
   touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;

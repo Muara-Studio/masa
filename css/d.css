@@ -11,15 +11,15 @@
 #gbtb { position: relative; height: 400dvh; }
 #gbtb .stage { position: sticky; top: 0; height: 100dvh; overflow: hidden; }
 #gbtb .date, #gbtb .title, #gbtb .tag, #gbtb .pill { position: absolute; }
-#gbtb .date { top: 29%; left: 0; right: 0; text-align: center; }
-#gbtb .title { top: 33%; left: 0; right: 0; padding: 0 var(--gutter); text-align: center; text-wrap: balance; font-size: var(--fs-xl); color: var(--paper); overflow: hidden; }
+#gbtb .date { top: 13.3%; left: 0; right: 0; text-align: center; }
+#gbtb .title { top: 18.9%; left: 0; right: 0; padding: 0 var(--gutter); text-align: center; text-wrap: balance; font-size: var(--fs-xl); color: var(--paper); overflow: hidden; }
 #gbtb .title span, #takashimaya .title span { display: inline-block; transform: translateY(105%); transition: transform 1.4s var(--ease); }
 #gbtb.is-in .title span, #takashimaya.is-in .title span { transform: none; }
-#gbtb .tag { top: 58%; }
+#gbtb .tag { top: 48.9%; }
 #gbtb .tag--l { left: var(--gutter); }
 #gbtb .tag--r { right: var(--gutter); text-align: right; }
 #gbtb .gl { z-index: 1; pointer-events: none; }
-#gbtb .pill { bottom: 8%; left: 50%; translate: -50% 0; }
+#gbtb .pill { bottom: 13.5%; left: 50%; translate: -50% 0; }
 /* no WebGL: a swatch of tiger fur where the tiger would walk */
 #gbtb .poster { display: none; }
 .no-gl #gbtb .poster, #gbtb.no-gl .poster {
@@ -31,25 +31,25 @@
   mask-image: radial-gradient(closest-side, #000 50%, transparent);
 }
 
-/* Takashimaya: one toy on a turntable, the venue name cut off by the bottom edge */
-#takashimaya { --toy: #2f3fb8; --tk: min(var(--fs-xxl), 12.4vw); position: relative; height: 95dvh; min-height: 560px; overflow: hidden; }
-#takashimaya .date { position: absolute; top: 12%; left: 0; right: 0; text-align: center; z-index: 2; }
-#takashimaya .title { position: absolute; left: 0; right: 0; bottom: 0; translate: 0 38%; text-align: center; font-size: var(--tk); color: var(--paper); overflow: hidden; }
+/* Takashimaya: the venue name across the top, one toy on a turntable under it */
+#takashimaya { --toy: #2f3fb8; --tk: clamp(30px, 9.2vw, 133px); position: relative; height: var(--sec-h); min-height: 560px; margin-top: 79px; overflow: hidden; }
+#takashimaya .date { position: absolute; top: 2.8%; left: 0; right: 0; text-align: center; z-index: 2; }
+#takashimaya .title { position: absolute; left: 0; right: 0; top: 5.2%; text-align: center; font-size: var(--tk); color: var(--paper); overflow: hidden; }
 #takashimaya .gl { z-index: 1; cursor: grab; touch-action: pan-y; }
 #takashimaya .gl:active { cursor: grabbing; }
-#takashimaya .ctl { position: absolute; top: 50%; translate: 0 -50%; display: flex; align-items: center; gap: 16px; z-index: 2; }
+#takashimaya .ctl { position: absolute; top: 49%; translate: 0 -50%; display: flex; align-items: center; gap: 25px; z-index: 2; }
 #takashimaya .ctl--l { left: var(--gutter); }
 #takashimaya .ctl--r { right: var(--gutter); }
 #takashimaya .count { font-variant-numeric: tabular-nums; }
 #takashimaya .arrow {
-  display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid currentColor; border-radius: 50%;
+  display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid currentColor; border-radius: 5px;
   transition: background-color .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease);
 }
-#takashimaya .arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.4; transition: translate .5s var(--ease); }
+#takashimaya .arrow svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.4; transition: translate .5s var(--ease); }
 #takashimaya .arrow:hover, #takashimaya .arrow:focus-visible { background: var(--paper-2); border-color: var(--paper-2); color: var(--black); }
 #takashimaya .arrow[data-dir="1"]:hover svg { translate: 2px 0; }
 #takashimaya .arrow[data-dir="-1"]:hover svg { translate: -2px 0; }
-#takashimaya .pill { position: absolute; left: 50%; translate: -50% 0; bottom: calc(var(--tk) * .62 + 28px); }
+#takashimaya .pill { position: absolute; left: 50%; translate: -50% 0; bottom: 4.9%; }
 /* no WebGL: the toy drawn as four flat blocks in the current toy's colour */
 #takashimaya .poster { display: none; }
 .no-gl #takashimaya .poster, #takashimaya.no-gl .poster {
@@ -62,10 +62,12 @@
 }
 
 @media (max-width: 767px) {
-  #gbtb .date { top: 15%; }
-  #gbtb .title { top: 18.5%; }
+  #gbtb { height: 190dvh; margin-top: 80px; } /* the reference's phone run: a shorter pin after an 80px gap */
+  #gbtb .date { top: 14%; }
+  #gbtb .title { top: 19%; font-size: 7.8vw; white-space: nowrap; }
   #gbtb .tag { left: var(--gutter); right: var(--gutter); text-align: center; }
-  #gbtb .tag--l { top: 37%; }
-  #gbtb .tag--r { top: auto; bottom: calc(8% + 56px); }
-  #takashimaya .ctl { top: auto; translate: none; bottom: calc(var(--tk) * .62 + 84px); }
+  #gbtb .tag--l { top: 27%; }
+  #gbtb .tag--r { top: auto; bottom: 17%; }
+  #gbtb .pill { bottom: 9%; }
+  #takashimaya .ctl { top: 56%; }
 }

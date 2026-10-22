@@ -44,8 +44,10 @@ export default function init(el, { gsap, ScrollTrigger, lenis, reduced }) {
 
   // AR and the product card belong to the hero; past it only SOUND stays
   const hero = document.getElementById('hero');
-  if (hero) ScrollTrigger.create({ trigger: hero, start: 'top bottom', end: 'bottom 75%', onToggle: (st) => hud.classList.toggle('is-hero', st.isActive) });
+  if (hero) ScrollTrigger.create({ trigger: hero, start: 'top bottom', end: 'bottom 30%', onToggle: (st) => hud.classList.toggle('is-hero', st.isActive) });
   else hud.classList.add('is-hero');
+  // in the reference the AR link and the product card belong to the hero and scroll away with it
+  if (hero) gsap.fromTo(hud.querySelectorAll('.hud__ar, .hud__card'), { '--lift': '0px' }, { '--lift': () => `${-hero.offsetHeight}px`, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
 
   // the HUD rides up with the top of the footer instead of sitting on it
   if (footer) gsap.to(hud, { y: () => -innerHeight, ease: 'none', scrollTrigger: { trigger: footer, start: 'top bottom', end: 'top top', scrub: true, invalidateOnRefresh: true } });
@@ -129,6 +131,21 @@ export default function init(el, { gsap, ScrollTrigger, lenis, reduced }) {
   };
   if (!reduced) card.addEventListener('animationend', (e) => { if (e.target.classList.contains('is-active')) show(i + 1); });
   card.querySelector('.card__next').addEventListener('click', () => show(i + 1));
+
+  // the reference's ring cursor: a small ring and dot that trail the pointer, inverted over light sections.
+  // The crosshair over MASA Sound and the stones' own ring take over there; touch screens never see it.
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const ring = document.createElement('div');
+    ring.id = 'cursor'; ring.setAttribute('aria-hidden', 'true');
+    document.body.append(ring);
+    const xTo = gsap.quickTo(ring, 'x', { duration: reduced ? 0 : 0.35, ease: 'power3' }), yTo = gsap.quickTo(ring, 'y', { duration: reduced ? 0 : 0.35, ease: 'power3' });
+    addEventListener('pointermove', (e) => {
+      xTo(e.clientX); yTo(e.clientY);
+      ring.classList.toggle('is-off', !!e.target.closest?.('#sound, #stones, #menu'));
+      ring.classList.add('is-on');
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => ring.classList.remove('is-on'));
+  }
 
   // newsletter: local format check and a success state; the form has no action and never sends
   const form = footer?.querySelector('.ft__nl');

@@ -22,7 +22,7 @@ void main() {
   gl_FragColor = c;
 }`;
 
-function orchids(canvas, st, { mobile, reduced, gsap, scroll }) {
+function orchids(canvas, st, { mobile, reduced, gsap }) {
   const s = stage(canvas, { fov: FOV, dpr: mobile ? 1.5 : 1.75 });
   const { THREE, renderer, scene, camera } = s;
   camera.position.set(0, 0, CAM_Z);
@@ -55,7 +55,7 @@ function orchids(canvas, st, { mobile, reduced, gsap, scroll }) {
   const ease = gsap.parseEase('power3.inOut');
 
   s.frame = (t, dt) => {
-    const f = 1 - Math.exp(-dt * 2.5), aspect = camera.aspect, sp = scroll.progress();
+    const f = 1 - Math.exp(-dt * 2.5), aspect = camera.aspect;
     mouse.x += (mouse.tx - mouse.x) * f; mouse.y += (mouse.ty - mouse.y) * f;
     const unit = Math.min(1, (aspect / 1.6) * (aspect < 0.8 ? 1.4 : 1));
     for (const o of sprays) {
@@ -67,9 +67,7 @@ function orchids(canvas, st, { mobile, reduced, gsap, scroll }) {
       o.group.scale.setScalar(o.s * unit);
       o.uniforms.uSway.value = reduced ? 0 : Math.sin(t * 0.5 + o.ph) * 0.05 + Math.sin(t * 1.27 + o.ph * 2.3) * 0.015;
     }
-    // scroll lifts the sprays faster than the page and pushes in a little
-    root.position.y = sp * 6.5;
-    root.scale.setScalar(1 + sp * 0.18);
+    // the canvas scrolls away with the page, as in the reference; no extra lift
 
     const blur = st.blur * renderer.getPixelRatio() * (mobile ? 0.6 : 1);
     quad.visible = false; root.visible = true;
@@ -101,15 +99,14 @@ export default function init(el, ctx) {
   }
   el.classList.add('is-live');
 
-  const scroll = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: 0.8 } })
-    .to($('.hero-title'), { yPercent: -12, ease: 'none', duration: 1 }, 0)
+  gsap.timeline({ scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: 0.8 } })
     .to($('.hero-scroll span'), { opacity: 0, ease: 'none', duration: 0.2 }, 0);
 
   const st = { d: skip ? 1 : 0, m: skip ? 1 : 0, blur: skip ? 0 : GATE_BLUR };
   let gl = false, ink = null;
   if (hasGL()) {
     try {
-      orchids($('.hero-gl'), st, { mobile, reduced, gsap, scroll });
+      orchids($('.hero-gl'), st, { mobile, reduced, gsap });
       if (!skip && !reduced) ink = createInk($('.hero-ink'));
       gl = true;
     } catch (err) { console.warn('[hero] no WebGL, static fallback', err); }
@@ -151,10 +148,11 @@ export default function init(el, ctx) {
     ink.uClick.value.set(click.x, click.y);
     el.classList.add('is-inking');
     gsap.timeline()
-      .to(st, { m: 1, duration: 2.3, ease: 'none' }, 0)
-      .to(st, { blur: 0, duration: 1.3, ease: 'power2.inOut' }, 0.1)
-      .to(ink.uP, { value: 1, duration: 1.6, ease: 'power1.inOut' }, 0)
-      .call(done, null, 1.6)
+      // the ink takes its time, as in the reference: a blot at the click, black by about 4.4 s, then the shell
+      .to(st, { m: 1, duration: 3.6, ease: 'none' }, 0.4)
+      .to(st, { blur: 0, duration: 1.6, ease: 'power2.inOut' }, 0.1)
+      .to(ink.uP, { value: 1, duration: 4.4, ease: 'none' }, 0)
+      .call(done, null, 4.6)
       .timeScale(q.has('slow') ? 1 / (+q.get('slow') || 10) : 1); // dev: ?slow=20 stretches the transition for captures
   };
 

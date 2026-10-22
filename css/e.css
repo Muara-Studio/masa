@@ -13,24 +13,17 @@
 
 /* ---------- MASA Sound ---------- */
 #sound {
-  position: relative; overflow: clip;
-  display: grid; justify-items: center; align-content: center;
-  grid-template-columns: 1fr minmax(0, 900px) 1fr;
-  grid-template-areas: ". date ." "title title title" "tagl stage tagr" ". cta .";
-  min-height: 100dvh; padding: 11vh var(--gutter) 9vh;
+  position: relative; overflow: clip; height: var(--sec-h); min-height: 560px;
   background: var(--black);
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M16 3v10M16 19v10M3 16h10M19 16h10' stroke='%23f3f3f3' stroke-width='1.25'/%3E%3C/svg%3E") 16 16, crosshair;
 }
-#sound .sound-date { grid-area: date; margin-bottom: 18px; }
-#sound .sound-title { grid-area: title; position: relative; z-index: 0; font-size: var(--fs-xxl); color: var(--paper); white-space: nowrap; }
-#sound .sound-stage {
-  grid-area: stage; position: relative; z-index: 1; width: 100%;
-  height: clamp(360px, 66vh, 640px); margin-top: calc(var(--fs-xxl) * -.62);
-  pointer-events: none;
-}
-#sound .sound-tag { grid-area: tagl; position: relative; z-index: 2; align-self: center; justify-self: start; }
-#sound .sound-tag--r { grid-area: tagr; justify-self: end; }
-#sound .sound-cta { grid-area: cta; position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 4px; }
+#sound :is(.sound-date, .sound-title, .sound-tag, .sound-cta) { position: absolute; z-index: 2; }
+#sound .sound-date { top: 2.8%; left: 0; right: 0; text-align: center; }
+#sound .sound-title { top: 7.2%; left: 0; right: 0; z-index: 0; font-size: var(--fs-xxl); line-height: 1.5; text-align: center; color: var(--paper); white-space: nowrap; }
+#sound .sound-stage { position: absolute; z-index: 1; left: 0; right: 0; top: 51.5%; height: 43vh; translate: 0 -50%; pointer-events: none; }
+#sound .sound-tag { top: 50%; translate: 0 -50%; left: var(--gutter); }
+#sound .sound-tag--r { left: auto; right: var(--gutter); }
+#sound .sound-cta { left: 0; right: 0; bottom: 4.9%; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 
 /* no WebGL: a drawn poster of the island under its dome */
 #sound .sound-poster { display: none; position: absolute; inset: 0; }
@@ -51,29 +44,22 @@
 }
 
 @media (max-width: 767px) {
-  #sound {
-    grid-template-columns: 100%;
-    grid-template-areas: "date" "title" "tagl" "stage" "tagr" "cta";
-    padding: 9vh var(--gutter) 8vh;
-  }
+  #sound { margin-top: 79px; }
   #sound .sound-title { font-size: clamp(40px, 12vw, 64px); }
-  #sound .sound-tag, #sound .sound-tag--r { justify-self: center; }
-  #sound .sound-tag--l { margin-top: 10px; }
-  #sound .sound-stage { height: min(100vw, 420px); margin-top: 0; }
-  #sound .sound-tag--r { margin-bottom: 14px; }
+  #sound .sound-stage { height: min(100vw, 420px); }
+  #sound .sound-tag { top: 30%; }
 }
 
 /* ---------- Brands ---------- */
 /* without JS this is its end state (paper); brands.js scrubs --bg/--fg in from black */
 #brands {
-  --bg: var(--paper); --fg: var(--ink);
+  --bg: var(--white); --fg: var(--ink); --edge: var(--white);
   position: relative; overflow: clip;
   display: flex; flex-direction: column;
-  min-height: 95dvh; padding-top: 12vh;
-  background: var(--bg); color: var(--fg);
+  background: radial-gradient(75% 75% at 50% 45%, var(--bg) 35%, var(--edge)); color: var(--fg);
 }
-#brands .brands-stage { position: relative; flex: 1; display: grid; place-content: center; justify-items: center; gap: 32px; padding: 0 var(--gutter); }
-#brands .brands-title { position: relative; z-index: 1; font-size: var(--fs-h2); text-align: center; color: var(--ink); }
+#brands .brands-stage { position: relative; height: var(--sec-h); min-height: 520px; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 0 var(--gutter); }
+#brands .brands-title { position: relative; z-index: 1; font-size: var(--fs-h2); line-height: 1.05; text-align: center; color: var(--ink); }
 #brands .brands-line { display: block; overflow: clip; padding-top: .06em; }
 #brands .brands-line > span { display: block; }
 #brands .brands-medal { display: block; position: relative; width: 2.7em; height: 2.7em; margin: -.32em auto; }
@@ -104,8 +90,10 @@
 #brands .parang { background: repeating-linear-gradient(45deg, #5b3a21 0 6px, #e8d3a9 6px 8px, #8a5a2b 8px 13px, #e8d3a9 13px 15px); }
 
 /* logo marquee: invented wordmarks in type only */
+/* the reference runs its logo strip as its own white band, 139px tall, under the section */
 #brands .brands-marquee {
-  overflow: hidden; padding: 44px 0 52px;
+  --bg: var(--white); --fg: var(--ink);
+  overflow: hidden; height: 139px; display: flex; align-items: center; background: var(--bg); color: var(--fg);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 7% 93%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 7% 93%, transparent);
 }
@@ -134,11 +122,11 @@
 #brands .w12 { font-weight: 800; font-size: 29px; text-transform: lowercase; transform: skewX(-12deg); text-decoration: underline wavy 1.5px; text-underline-offset: 7px; }
 
 @media (max-width: 767px) {
-  #brands { min-height: 76dvh; padding-top: 8vh; }
+  #brands { margin-top: 79px; }
   #brands .card { --k: .62; }
   #brands .card:nth-child(n + 9) { display: none; }
   #brands .brands-list { gap: 52px; padding-right: 52px; }
-  #brands .brands-marquee { padding: 32px 0 40px; }
+
 }
 @media (prefers-reduced-motion: reduce) {
   /* no drift: the logos become a row you can scroll yourself */
